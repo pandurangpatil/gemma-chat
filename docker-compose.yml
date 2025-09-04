@@ -1,0 +1,51 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - chat_network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: chat_backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app
+    environment:
+      - DATABASE_URL=sqlite:////app/chat.db
+      - OLLAMA_HOST=http://ollama:11434
+      # Pass other env vars if needed, or use .env file
+    depends_on:
+      - ollama
+    networks:
+      - chat_network
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: chat_frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules # prevent host node_modules from overwriting container
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8000
+    depends_on:
+      - backend
+    networks:
+      - chat_network
+
+volumes:
+  ollama_data:
+
+networks:
+  chat_network:
+    driver: bridge

@@ -3,3 +3,10 @@ uvicorn[standard]
 sqlmodel
 alembic
 httpx
+python-dotenv
+ollama
+pysqlite3-binary
+
+# Testing
+pytest
+pytest-cov

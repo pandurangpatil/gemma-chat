@@ -1,8 +1,12 @@
+import os
 from sqlalchemy import event
 from sqlalchemy.engine import Engine
 from sqlmodel import create_engine, Session, SQLModel
+from dotenv import load_dotenv
 
-DATABASE_URL = "sqlite:///chat.db"
+load_dotenv()
+
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///chat.db")
 
 # Use event listeners to set PRAGMA for SQLite
 @event.listens_for(Engine, "connect")
