@@ -24,52 +24,87 @@ This project is a feature-complete, full-stack web application that provides a p
 
 For more details, see the [Architecture Documentation](./docs/ARCHITECTURE.md).
 
-## Getting Started
+## Quick Start
+
+### 🚀 Automated Setup (Recommended)
+
+Choose your platform and run the automated setup script:
+
+**macOS:**
+```bash
+git clone https://github.com/your-username/gemma-chat.git
+cd gemma-chat
+./setup-mac.sh
+```
+
+**Ubuntu/Linux:**
+```bash
+git clone https://github.com/your-username/gemma-chat.git
+cd gemma-chat
+./setup-ubuntu.sh
+```
+
+The scripts will:
+- Install all required dependencies
+- Set up the environment
+- Start the application with Docker
+- Download the Gemma model
+- Provide you with access URLs
+
+### 📱 Access Your Application
+
+After setup completes:
+- **Frontend:** http://localhost:5173
+- **Backend API:** http://localhost:8000/docs
+- **Ollama API:** http://localhost:11434
+
+---
+
+## Manual Setup
+
+If you prefer to set up manually or the automated scripts don't work for your system:
 
 ### Prerequisites
 
 -   [Docker](https://www.docker.com/get-started) and Docker Compose
--   An Ollama-compatible model. We recommend `gemma:2b`.
+-   Node.js 18+ (for local development)
+-   Python 3.9+ (for local development)
 
-### 1. Clone the Repository
-
-```bash
-git clone <repository-url>
-cd <repository-name>
-```
-
-### 2. Configure Environment Variables
-
-Create a `.env` file in the `backend/` directory by copying the example file. This step is optional, as the default values are configured to work with the Docker Compose setup.
+### 1. Clone and Configure
 
 ```bash
+git clone https://github.com/your-username/gemma-chat.git
+cd gemma-chat
 cp backend/.env.example backend/.env
 ```
 
-### 3. Build and Run the Application
-
-The entire application stack can be started with a single command. This will build the Docker images, start the containers, and run the database migrations automatically.
+### 2. Start with Docker (Recommended)
 
 ```bash
-docker compose up --build
-```
+# Build and start all services
+docker compose up --build -d
 
-### 4. Pull the LLM Model
-
-The first time you run the application, you need to pull the LLM model. Open a **new terminal** and run the following command:
-
-```bash
+# Install the Gemma model (this may take a few minutes)
 docker compose exec ollama ollama pull gemma:2b
 ```
 
-Once the model is downloaded, the application will be fully functional.
+### 3. Access the Application
 
-### 5. Access the Application
+-   **Frontend:** http://localhost:5173
+-   **Backend API:** http://localhost:8000/docs
 
--   **Frontend:** Open your browser to `http://localhost:5173`
--   **Backend API Docs:** `http://localhost:8000/docs`
+### 4. Managing the Application
 
-After running the application, you can take a screenshot of the UI and add it to the `README.md` to replace the placeholder.
+```bash
+# Stop the application
+docker compose down
+
+# View logs
+docker compose logs -f
+
+# Restart after code changes
+docker compose up --build -d
+```
 
 ## Deployment
 
@@ -232,6 +267,41 @@ cd <repository-name>
 -   **Backend API Docs:** `http://your_domain_or_ip:8000/docs`
 
 Remember to deactivate the Python virtual environment (`deactivate`) when you are done.
+
+## Troubleshooting
+
+### Common Issues and Solutions
+
+**Docker Issues:**
+- **"Docker is not running"**: Make sure Docker Desktop is started
+- **Permission denied**: On Linux, add your user to docker group: `sudo usermod -aG docker $USER`, then log out/in
+- **Port conflicts**: If ports 5173, 8000, or 11434 are in use, stop other services or modify `docker-compose.yml`
+
+**Model Issues:**
+- **Gemma model fails to download**: Try manually: `docker compose exec ollama ollama pull gemma:2b`
+- **Out of memory errors**: Gemma 2B requires at least 4GB RAM. Try `gemma:1b` for lower memory usage
+- **Slow responses**: First responses are slower as the model loads into memory
+
+**Application Issues:**
+- **Frontend won't load**: Check if backend is running: `curl http://localhost:8000/api/threads`
+- **API requests fail**: Verify nginx proxy is working in frontend container
+- **Build failures**: Run `docker system prune -a` to clean Docker cache and rebuild
+
+**Platform-Specific:**
+- **macOS M1/M2**: No special configuration needed, containers will use ARM64 images
+- **Windows**: Use WSL2 backend for Docker Desktop for best performance
+- **Low-end systems**: Consider using `gemma:1b` model instead of `gemma:2b`
+
+### Getting Help
+
+1. Check the container logs: `docker compose logs -f`
+2. Verify all services are running: `docker compose ps`
+3. Test individual services:
+   - Backend health: `curl http://localhost:8000/api/threads`
+   - Ollama health: `curl http://localhost:11434/api/tags`
+4. For persistent issues, file a bug report with your system info and logs
+
+---
 
 ## Known Issues
 

@@ -7,6 +7,7 @@ WORKDIR /app
 # Install system dependencies that might be needed
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
+    libsqlite3-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy the requirements file into the container
@@ -19,9 +20,9 @@ RUN pip install --no-cache-dir --upgrade pip && \
 # Copy the rest of the application's code into the container
 COPY . .
 
-# Run Alembic migrations
-RUN alembic upgrade head
+# Create startup script
+COPY startup.sh .
+RUN chmod +x startup.sh
 
-# Command to run the application
-# Use 0.0.0.0 to make it accessible from outside the container
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Command to run the application with migrations
+CMD ["./startup.sh"]

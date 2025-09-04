@@ -7,8 +7,8 @@ const API_BASE_URL = '/api'; // Vite proxy will handle this
 const ThreadSchema = z.object({
   id: z.string(),
   title: z.string(),
-  created_at: z.string().datetime(),
-  updated_at: z.string().datetime(),
+  created_at: z.string(),
+  updated_at: z.string(),
   summary: z.string().nullable(),
 });
 
@@ -20,7 +20,7 @@ const MessageSchema = z.object({
     role: z.enum(['system', 'user', 'assistant']),
     content: z.string(),
     tokens: z.number().nullable(),
-    created_at: z.string().datetime(),
+    created_at: z.string(),
 });
 
 export type Message = z.infer<typeof MessageSchema>;
@@ -79,4 +79,35 @@ export async function postMessage(threadId: string, content: string) {
         throw new Error('Failed to post message or get response body');
     }
     return response;
+}
+
+export async function updateThread(threadId: string, updates: { title?: string; summary?: string }): Promise<Thread> {
+    const response = await fetch(`${API_BASE_URL}/threads/${threadId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+    });
+    if (!response.ok) {
+        throw new Error('Failed to update thread');
+    }
+    const data = await response.json();
+    return ThreadSchema.parse(data);
+}
+
+export async function deleteThread(threadId: string): Promise<void> {
+    const response = await fetch(`${API_BASE_URL}/threads/${threadId}`, {
+        method: 'DELETE',
+    });
+    if (!response.ok) {
+        throw new Error('Failed to delete thread');
+    }
+}
+
+export async function clearAllThreads(): Promise<void> {
+    const response = await fetch(`${API_BASE_URL}/threads`, {
+        method: 'DELETE',
+    });
+    if (!response.ok) {
+        throw new Error('Failed to clear all threads');
+    }
 }

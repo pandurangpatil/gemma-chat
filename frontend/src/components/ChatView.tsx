@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-import { getThread, postMessage, Message as ApiMessage } from '../lib/api';
+import { getThread, postMessage } from '../lib/api';
 import { CodeBlock } from './CodeBlock';
 import { Send } from 'lucide-react';
 

@@ -8,6 +8,12 @@ services:
       - ollama_data:/root/.ollama
     networks:
       - chat_network
+    healthcheck:
+      test: ["CMD-SHELL", "ollama list > /dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
 
   backend:
     build:
@@ -23,9 +29,16 @@ services:
       - OLLAMA_HOST=http://ollama:11434
       # Pass other env vars if needed, or use .env file
     depends_on:
-      - ollama
+      ollama:
+        condition: service_healthy
     networks:
       - chat_network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/threads')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
 
   frontend:
     build:
@@ -38,9 +51,16 @@ services:
       # This is not used by the Nginx setup, but is kept for reference
       - VITE_API_BASE_URL=http://localhost:8000
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     networks:
       - chat_network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
 
 volumes:
   ollama_data:

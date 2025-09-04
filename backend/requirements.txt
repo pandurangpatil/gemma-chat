@@ -5,7 +5,7 @@ alembic
 httpx
 python-dotenv
 ollama
-pysqlite3-binary
+pysqlite3
 
 # Testing
 pytest

@@ -103,7 +103,7 @@ async def generate_title(conversation: str) -> str:
     Generates a concise title for a conversation.
     """
     prompt = f"""
-    Propose a concise 3-6 word title that best describes this conversation.
+    Propose a concise title that best describes this conversation using exactly 1-3 words maximum.
     Output only the title, no punctuation at the end.
 
     Conversation:

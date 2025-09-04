@@ -12,7 +12,13 @@ from models import Message, Thread
 from schemas import MessageCreate, ThreadCreate, ThreadRead, ThreadReadWithMessages, ThreadUpdate
 
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Create database tables on startup
+    create_db_and_tables()
+    yield
+
+app = FastAPI(lifespan=lifespan)
 
 
 # --- Threads Endpoints ---
@@ -87,6 +93,18 @@ def delete_thread(thread_id: str, db: Session = Depends(get_session)):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Thread not found")
 
     db.delete(thread)
+    db.commit()
+    return None
+
+
+@app.delete("/api/threads", status_code=status.HTTP_204_NO_CONTENT)
+def delete_all_threads(db: Session = Depends(get_session)):
+    """
+    Delete all threads and their messages.
+    """
+    threads = db.exec(select(Thread)).all()
+    for thread in threads:
+        db.delete(thread)
     db.commit()
     return None
 
