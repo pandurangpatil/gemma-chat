@@ -30,13 +30,12 @@ services:
   frontend:
     build:
       context: ./frontend
+      dockerfile: Dockerfile
     container_name: chat_frontend
     ports:
-      - "5173:5173"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules # prevent host node_modules from overwriting container
+      - "5173:80" # Map host port 5173 to container port 80 (Nginx)
     environment:
+      # This is not used by the Nginx setup, but is kept for reference
       - VITE_API_BASE_URL=http://localhost:8000
     depends_on:
       - backend
