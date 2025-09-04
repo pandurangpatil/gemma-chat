@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { nanoid } from 'nanoid';
 import { getThread, postMessage } from '../lib/api';
 import { CodeBlock } from './CodeBlock';
 import { Send } from 'lucide-react';
@@ -75,12 +76,12 @@ export function ChatView() {
     if (!threadId || !inputValue.trim()) return;
 
     const userMessage: DisplayMessage = {
-      id: crypto.randomUUID(),
+      id: nanoid(),
       role: 'user',
       content: inputValue,
     };
     const assistantPlaceholder: DisplayMessage = {
-        id: crypto.randomUUID(),
+        id: nanoid(),
         role: 'assistant',
         content: '',
     };
@@ -115,7 +116,7 @@ export function ChatView() {
                 <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
                     components={{
-                        code({ node, className, children, ...props }) {
+                        code({ className, children, ...props }) {
                             const match = /language-(\w+)/.exec(className || '');
                             const lang = match ? match[1] : undefined;
                             return (

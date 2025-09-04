@@ -4,6 +4,10 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  build: {
+    target: ['es2015', 'chrome60', 'firefox60', 'safari11'],
+    polyfillModulePreload: false,
+  },
   server: {
     proxy: {
       '/api': {
