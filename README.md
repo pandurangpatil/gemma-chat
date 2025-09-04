@@ -26,6 +26,62 @@ For more details, see the [Architecture Documentation](./docs/ARCHITECTURE.md).
 
 ## Quick Start
 
+## Tech Stack
+
+-   **Backend:** FastAPI, SQLModel, Alembic, Ollama-python
+-   **Frontend:** React, TypeScript, Vite, Tailwind CSS, TanStack Query
+-   **Database:** SQLite
+-   **LLM:** Gemma (served via Ollama)
+
+For more details, see the [Architecture Documentation](./docs/ARCHITECTURE.md).
+
+## Getting Started
+
+### With Docker
+
+### Prerequisites
+
+-   [Docker](https://www.docker.com/get-started) and Docker Compose
+-   An Ollama-compatible model. We recommend `gemma:2b`.
+
+### 1. Clone the Repository
+
+```bash
+git clone <repository-url>
+cd <repository-name>
+```
+
+### 2. Configure Environment Variables
+
+Create a `.env` file in the `backend/` directory by copying the example file. This step is optional, as the default values are configured to work with the Docker Compose setup.
+
+```bash
+cp backend/.env.example backend/.env
+```
+
+### 3. Build and Run the Application
+
+The entire application stack can be started with a single command. This will build the Docker images, start the containers, and run the database migrations automatically.
+
+```bash
+docker compose up --build
+```
+
+### 4. Pull the LLM Model
+
+The first time you run the application, you need to pull the LLM model. Open a **new terminal** and run the following command:
+
+```bash
+docker compose exec ollama ollama pull gemma:2b
+```
+
+Once the model is downloaded, the application will be fully functional.
+
+### 5. Access the Application
+
+-   **Frontend:** Open your browser to `http://localhost:5173`
+-   **Backend API Docs:** `http://localhost:8000/docs`
+
 ### 🚀 Automated Setup (Recommended)
 
 Choose your platform and run the automated setup script:
