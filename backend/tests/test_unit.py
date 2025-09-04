@@ -70,12 +70,13 @@ class TestLLMLogic(unittest.TestCase):
         # - long_message: 20 tokens. Total: 26
         # - long_message: 20 tokens. Total: 46
         # - "message 2": 3 tokens. Total: 49
-        # - "message 1": 3 tokens. Total: 52 -> This one is excluded.
-        # So, 1 system message + 4 history messages = 5.
-        self.assertEqual(len(prompt), 5)
+        # - "message 1": 2 tokens. Total: 28 -> This one is included.
+        # So, 1 system message + 5 history messages = 6.
+        self.assertEqual(len(prompt), 6)
 
         prompt_contents = " ".join([m["content"] for m in prompt])
-        self.assertNotIn("message 1", prompt_contents)
+        self.assertIn("message 1", prompt_contents)
+        self.assertIn("latest message", prompt_contents)
         self.assertIn("message 2", prompt_contents)
 
 if __name__ == '__main__':
