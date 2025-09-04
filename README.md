@@ -2,8 +2,6 @@
 
 This project is a feature-complete, full-stack web application that provides a public chat interface for Google's Gemma LLM, served locally via Ollama. It features persistent, thread-based conversations, real-time message streaming, and a clean, responsive UI.
 
-![Screenshot](placeholder.gif) <!-- TODO: Add a screenshot or gif of the UI -->
-
 ## Features
 
 -   **Full-Stack Application:** Python/FastAPI backend and a React/Vite frontend.
@@ -21,7 +19,7 @@ This project is a feature-complete, full-stack web application that provides a p
 
 -   **Backend:** FastAPI, SQLModel, Alembic, Ollama-python
 -   **Frontend:** React, TypeScript, Vite, Tailwind CSS, TanStack Query
---   **Database:** SQLite
+-   **Database:** SQLite
 -   **LLM:** Gemma (served via Ollama)
 
 For more details, see the [Architecture Documentation](./docs/ARCHITECTURE.md).
@@ -31,7 +29,7 @@ For more details, see the [Architecture Documentation](./docs/ARCHITECTURE.md).
 ### Prerequisites
 
 -   [Docker](https://www.docker.com/get-started) and Docker Compose
--   An Ollama-compatible model. We use `gemma:2b`.
+-   An Ollama-compatible model. We recommend `gemma:2b`.
 
 ### 1. Clone the Repository
 
@@ -42,30 +40,23 @@ cd <repository-name>
 
 ### 2. Configure Environment Variables
 
-Create a `.env` file in the `backend/` directory by copying the example file.
+Create a `.env` file in the `backend/` directory by copying the example file. This step is optional, as the default values are configured to work with the Docker Compose setup.
 
 ```bash
 cp backend/.env.example backend/.env
 ```
 
-The default values in `.env` are configured to work with the `docker-compose` setup. You can customize the model name or other parameters if you wish.
+### 3. Build and Run the Application
 
-### 3. Run the Application
-
-The entire application stack can be started with a single command:
+The entire application stack can be started with a single command. This will build the Docker images, start the containers, and run the database migrations automatically.
 
 ```bash
 docker compose up --build
 ```
 
-This will:
-1.  Build the Docker images for the frontend and backend services.
-2.  Start the `ollama`, `backend`, and `frontend` containers.
-3.  Create the SQLite database and run migrations automatically.
-
 ### 4. Pull the LLM Model
 
-The first time you run the application, you need to pull the Ollama model. Open a new terminal and run:
+The first time you run the application, you need to pull the LLM model. Open a **new terminal** and run the following command:
 
 ```bash
 docker compose exec ollama ollama pull gemma:2b
@@ -77,6 +68,8 @@ Once the model is downloaded, the application will be fully functional.
 
 -   **Frontend:** Open your browser to `http://localhost:5173`
 -   **Backend API Docs:** `http://localhost:8000/docs`
+
+After running the application, you can take a screenshot of the UI and add it to the `README.md` to replace the placeholder.
 
 ## Deployment
 
