@@ -31,6 +31,12 @@ const ThreadWithMessagesSchema = ThreadSchema.extend({
 
 export type ThreadWithMessages = z.infer<typeof ThreadWithMessagesSchema>;
 
+const VersionResponseSchema = z.object({
+  version: z.string(),
+});
+
+export type VersionResponse = z.infer<typeof VersionResponseSchema>;
+
 
 // --- API Fetching Functions ---
 
@@ -110,4 +116,13 @@ export async function clearAllThreads(): Promise<void> {
     if (!response.ok) {
         throw new Error('Failed to clear all threads');
     }
+}
+
+export async function getVersion(): Promise<VersionResponse> {
+    const response = await fetch(`${API_BASE_URL}/version`);
+    if (!response.ok) {
+        throw new Error('Failed to fetch version');
+    }
+    const data = await response.json();
+    return VersionResponseSchema.parse(data);
 }

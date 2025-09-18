@@ -1,6 +1,11 @@
 # Use an official Python runtime as a parent image
 FROM python:3.12-slim
 
+# Define build argument for the application version
+ARG APP_VERSION
+# Set the application version as an environment variable
+ENV APP_VERSION=$APP_VERSION
+
 # Set the working directory in the container
 WORKDIR /app
 

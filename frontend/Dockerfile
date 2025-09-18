@@ -1,6 +1,9 @@
 # Stage 1: Build the React application
 FROM node:20-alpine AS build
 
+# Define build argument for the application version
+ARG APP_VERSION
+
 # Set the working directory
 WORKDIR /app
 
@@ -13,9 +16,9 @@ RUN npm install
 # Copy the rest of the application source code
 COPY . .
 
-# Build the application
+# Build the application, injecting the version number
 # The output will be in the /app/dist directory
-RUN npm run build
+RUN VITE_APP_VERSION=${APP_VERSION:-0.0.0-dev} npm run build
 
 # Stage 2: Serve the application with Nginx
 FROM nginx:stable-alpine
