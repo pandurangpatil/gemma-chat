@@ -33,3 +33,7 @@ class ThreadReadWithMessages(ThreadRead):
 class ThreadUpdate(BaseModel):
     title: Optional[str] = None
     summary: Optional[str] = None
+
+# Schema for Version
+class VersionResponse(BaseModel):
+    version: str

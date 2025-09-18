@@ -1,3 +1,4 @@
+import os
 from typing import List, AsyncGenerator, Dict, Any
 from contextlib import asynccontextmanager
 from datetime import datetime
@@ -9,7 +10,14 @@ from sqlmodel import Session, select
 from database import get_session, engine, create_db_and_tables
 from llm import stream_ollama_response, build_prompt, generate_title, generate_summary
 from models import Message, Thread
-from schemas import MessageCreate, ThreadCreate, ThreadRead, ThreadReadWithMessages, ThreadUpdate
+from schemas import (
+    MessageCreate,
+    ThreadCreate,
+    ThreadRead,
+    ThreadReadWithMessages,
+    ThreadUpdate,
+    VersionResponse,
+)
 
 
 @asynccontextmanager
@@ -204,6 +212,17 @@ async def summarize_thread_endpoint(thread_id: str, db: Session = Depends(get_se
     print(f"Summarization task requested for thread {thread_id}")
     # Here you would call a summarization function similar to generate_title
     return {"message": "Summarization task started."}
+
+
+# --- Version Endpoint ---
+
+@app.get("/api/version", response_model=VersionResponse)
+def get_version():
+    """
+    Returns the application version from the APP_VERSION environment variable.
+    """
+    app_version = os.getenv("APP_VERSION", "0.0.0-dev")
+    return VersionResponse(version=app_version)
 
 
 # --- Root Endpoint ---

@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getThreads, createThread, clearAllThreads, updateThread } from '../lib/api';
 import { PlusSquare, Search, Trash2, Edit3, Check, X } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { VersionInfo } from './VersionInfo';
 
 // Custom hook for debouncing
 function useDebounce(value: string, delay: number) {
@@ -205,6 +206,8 @@ export function Sidebar() {
         </nav>
       </div>
       
+      <VersionInfo />
+
       {/* Clear All Confirmation Dialog */}
       {showClearAllDialog && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
